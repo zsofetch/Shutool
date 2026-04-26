@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Shutool.ViewModels"
+             x:Class="Shutool.Views.ProfilePage"
+             x:DataType="viewmodels:ProfileViewModel"
+             BackgroundColor="#F5EFE1"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20, 40, 20, 20">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*, *" Margin="0,0,0,20">
+            <Image Source="gear_icon.png" HorizontalOptions="Start" HeightRequest="30"/>
+            <Image Source="lightning_icon.png" Grid.Column="1" HorizontalOptions="End" HeightRequest="30"/>
+        </Grid>
+
+        <Label Grid.Row="1" Text="PROFILE" TextColor="#1E3B20" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" Margin="0,0,0,30"/>
+
+        <Border Grid.Row="2" BackgroundColor="#4A5D4A" StrokeShape="RoundRectangle 40" StrokeThickness="0" Padding="30" VerticalOptions="Start">
+            <VerticalStackLayout Spacing="15">
+
+                <Border StrokeShape="RoundRectangle 60" HeightRequest="120" WidthRequest="120" StrokeThickness="3" Stroke="#F5EFE1" HorizontalOptions="Center" Margin="0,-80,0,20">
+                    <Image Source="{Binding CurrentAvatarImage}" Aspect="AspectFill" BackgroundColor="#F5EFE1">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeAvatarCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Border>
+                <Label Text="Tap avatar to change" TextColor="#A0B0A0" FontSize="10" HorizontalOptions="Center" Margin="0,-15,0,10"/>
+
+                <Label Text="Username" TextColor="White" FontSize="14" Margin="5,0,0,-10"/>
+                <Border BackgroundColor="#F5EFE1" StrokeShape="RoundRectangle 20" Padding="15,0" StrokeThickness="0">
+                    <Entry Text="{Binding Username}" TextColor="Black" />
+                </Border>
+
+                <Label Text="Email" TextColor="White" FontSize="14" Margin="5,10,0,-10"/>
+                <Border BackgroundColor="#F5EFE1" StrokeShape="RoundRectangle 20" Padding="15,0" StrokeThickness="0">
+                    <Entry Text="{Binding Email}" TextColor="Gray" IsReadOnly="True" />
+                </Border>
+
+                <Label Text="ID Number" TextColor="White" FontSize="14" Margin="5,10,0,-10"/>
+                <Border BackgroundColor="#F5EFE1" StrokeShape="RoundRectangle 20" Padding="15,0" StrokeThickness="0">
+                    <Entry Text="{Binding StudentId}" TextColor="Black" Keyboard="Numeric" />
+                </Border>
+
+                <Button Text="Edit Profile" 
+                        Command="{Binding SaveProfileCommand}"
+                        BackgroundColor="#73D073" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="20"
+                        WidthRequest="120"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,0"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

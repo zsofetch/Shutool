@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Shutool.ViewModels"
+             xmlns:models="clr-namespace:Shutool.Models"
+             x:Class="Shutool.Views.AdminRequestLogPage"
+             x:DataType="viewmodels:AdminRequestLogViewModel"
+             BackgroundColor="#F5EFE1"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="0">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*, *" Padding="20,40,20,0">
+            <Image Source="gear_icon.png" HorizontalOptions="Start" HeightRequest="30">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToProfileCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Image Source="lightning_icon.png" Grid.Column="1" HorizontalOptions="End" HeightRequest="30"/>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="10" HorizontalOptions="Center">
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Manage Users" Command="{Binding GoToManageUsersCommand}" BackgroundColor="#F5C518" TextColor="#1E3B20" FontAttributes="Bold" CornerRadius="20" HeightRequest="35"/>
+                <Button Text="Create Account" BackgroundColor="#73D073" TextColor="White" FontAttributes="Bold" CornerRadius="20" HeightRequest="35"/>
+            </HorizontalStackLayout>
+            <Button Text="Monitor Request" BackgroundColor="#5299D3" TextColor="White" FontAttributes="Bold" CornerRadius="20" HeightRequest="35" HorizontalOptions="Start"/>
+
+            <Image Source="bus_pixel.png" HeightRequest="70" HorizontalOptions="Center" Margin="0,10,0,0"/>
+        </VerticalStackLayout>
+
+        <Border Grid.Row="2" BackgroundColor="#2D3A2D" StrokeShape="RoundRectangle 40,40,0,0" StrokeThickness="0" Padding="20, 30, 20, 20">
+            <Grid RowDefinitions="Auto, Auto, *">
+
+                <Label Grid.Row="0" Text="Request Log" TextColor="#F5C518" FontAttributes="Bold" FontSize="18" Margin="0,0,0,15"/>
+
+                <Grid Grid.Row="1" ColumnDefinitions="2*, Auto, 1*" ColumnSpacing="10" Margin="0,0,0,20">
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 20" Padding="10,0" StrokeThickness="0">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Entry Text="{Binding SearchText}" Placeholder="Search" TextColor="Black" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="🔍" VerticalOptions="Center" Margin="0,0,5,0"/>
+                        </Grid>
+                    </Border>
+
+                    <Label Grid.Column="1" Text="Status" TextColor="#F5C518" FontAttributes="Bold" VerticalOptions="Center"/>
+
+                    <Border Grid.Column="2" BackgroundColor="White" StrokeShape="RoundRectangle 15" Padding="5,0" StrokeThickness="0">
+                        <Picker ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding SelectedStatus}" TextColor="Black" Title="All"/>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="2" RowDefinitions="Auto, *">
+                    <Grid Grid.Row="0" ColumnDefinitions="0.8*, 1.5*, 1.5*, 1.5*, 1*" Margin="0,0,0,10">
+                        <Label Text="ID" TextColor="#F5C518" FontAttributes="Bold" FontSize="11"/>
+                        <Label Grid.Column="1" Text="Time" TextColor="#F5C518" FontAttributes="Bold" FontSize="11"/>
+                        <Label Grid.Column="2" Text="Requested by" TextColor="#F5C518" FontAttributes="Bold" FontSize="11"/>
+                        <Label Grid.Column="3" Text="Handled by" TextColor="#F5C518" FontAttributes="Bold" FontSize="11"/>
+                        <Label Grid.Column="4" Text="Status" TextColor="#F5C518" FontAttributes="Bold" FontSize="11"/>
+                    </Grid>
+
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding DisplayLogs}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:AdminRequestDisplayModel">
+                                <Grid ColumnDefinitions="0.8*, 1.5*, 1.5*, 1.5*, 1*" Padding="0,15">
+                                    <Label Text="{Binding ShortId}" TextColor="#E0D8C8" FontSize="10" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding TimeFormatted}" TextColor="White" FontSize="10" VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="{Binding RequestedBy}" TextColor="White" FontSize="10" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                    <Label Grid.Column="3" Text="{Binding HandledBy}" TextColor="White" FontSize="10" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                    <Label Grid.Column="4" Text="{Binding Status}" TextColor="#73D073" FontAttributes="Bold" FontSize="10" VerticalOptions="Center"/>
+
+                                    <BoxView Grid.ColumnSpan="5" HeightRequest="1" Color="#4A5D4A" VerticalOptions="End"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>
+    
+    

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Shutool.ViewModels"
+             x:Class="Shutool.Views.RiderMainPage"
+             x:DataType="viewmodels:RiderMainViewModel"
+             BackgroundImageSource="pixel_street_bg.png"
+             NavigationPage.HasNavigationBar="False">
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20, 40, 20, 20">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*, *" Margin="0,0,0,20">
+            <Image Source="gear_icon.png" HorizontalOptions="Start" HeightRequest="30">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToProfileCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+
+            <Image Source="lightning_icon.png" Grid.Column="1" HorizontalOptions="End" HeightRequest="30"/>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,0,0,20">
+            <Button Text="Priority Request" 
+                    BackgroundColor="#F5C518" 
+                    TextColor="#1E3B20" 
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    HeightRequest="40"/>
+
+            <Button Grid.Column="1"
+                    Text="Request History" 
+                    Command="{Binding GoToHistoryCommand}"
+                    BackgroundColor="#73D073" 
+                    TextColor="White" 
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    HeightRequest="40"/>
+        </Grid>
+
+        <Border Grid.Row="2" 
+                BackgroundColor="#F5EFE1" 
+                StrokeShape="RoundRectangle 30" 
+                StrokeThickness="0"
+                Padding="20, 30, 20, 20"
+                VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="10">
+
+                <Image Source="bus_pixel.png" HeightRequest="80" Margin="0,0,0,10"/>
+
+                <Label Text="Send Priority Request" 
+                       TextColor="#1E3B20" 
+                       FontAttributes="Bold" 
+                       FontSize="18"
+                       HorizontalOptions="Center"/>
+
+                <Label Text="Why do you need a ride?" 
+                       TextColor="#4A5D4A" 
+                       FontSize="14"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,10"/>
+
+                <Border BackgroundColor="White" 
+                        StrokeShape="RoundRectangle 10" 
+                        StrokeThickness="0"
+                        HeightRequest="150"
+                        Padding="10">
+                    <Editor Text="{Binding ReasonText}" 
+                            Placeholder="Type here..." 
+                            TextColor="Black"
+                            AutoSize="Disabled"
+                            VerticalOptions="FillAndExpand"/>
+                </Border>
+
+                <Button Text="Send" 
+                        Command="{Binding SendRequestCommand}"
+                        BackgroundColor="#73D073" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="20"
+                        WidthRequest="120"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,0"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>
