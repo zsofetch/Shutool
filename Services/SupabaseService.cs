@@ -40,34 +40,33 @@ namespace Shutool.Services
         }
 
         // 2. Add future methods here (e.g., CreateRequestAsync, GetPendingRequestsAsync)
-        public async Task<bool> SignUpUserAsync(string email, string password, string name)
+        public async Task<(bool IsSuccess, string Message)> SignUpUserAsync(string email, string password, string name)
         {
             try
             {
-                // 1. Create the user in Supabase Auth
                 var session = await _client.Auth.SignUp(email, password);
 
                 if (session != null && session.User != null)
                 {
-                    // 2. Create the associated profile in the public.users table
                     var newUser = new UserModel
                     {
                         Id = session.User.Id,
                         Email = email,
                         Username = name,
-                        Role = "rider", // Defaulting new signups to riders
+                        Role = "rider",
                         AvatarId = 1
                     };
 
                     await _client.From<UserModel>().Insert(newUser);
-                    return true;
+                    return (true, "Account created successfully!");
                 }
-                return false;
+                return (false, "Supabase returned an empty session.");
             }
             catch (Exception ex)
             {
+                // This captures the REAL error directly from Supabase!
                 Console.WriteLine($"Signup Error: {ex.Message}");
-                return false;
+                return (false, ex.Message);
             }
         }
         public async Task<(bool IsSuccess, string Message)> CreatePriorityRequestAsync(string reason)
@@ -127,9 +126,9 @@ namespace Shutool.Services
                 // 2. Extract the unique Rider IDs
                 var riderIds = pendingRequests.Models.Select(r => r.RiderId).Distinct().ToList();
 
-                // 3. Fetch the user details for those riders
+                // 3. Fetch the user details for those riders (UPDATED)
                 var riders = await _client.From<UserModel>()
-                                          .Where(u => riderIds.Contains(u.Id))
+                                          .Filter("id", Postgrest.Constants.Operator.In, riderIds)
                                           .Get();
 
                 // 4. Combine the data into our Display Model

@@ -8,7 +8,8 @@ namespace Shutool.Models
     [Table("users")]
     public class UserModel : BaseModel
     {
-        [PrimaryKey("id", false)] // False because Supabase Auth generates the UUID
+        // Add the 'true' flag here! This forces the app to send your ID.
+        [PrimaryKey("id", true)]
         public string Id { get; set; }
 
         [Column("email")]
@@ -20,10 +21,10 @@ namespace Shutool.Models
         [Column("role")]
         public string Role { get; set; }
 
-        [Column("student_id")]
-        public string StudentId { get; set; }
-
         [Column("avatar_id")]
         public int AvatarId { get; set; }
+
+        [Column("student_id")]
+        public string StudentId { get; set; }
     }
 }

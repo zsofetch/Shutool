@@ -41,7 +41,6 @@ namespace Shutool
             // builder.Services.AddTransient<LoginPage>();
             // builder.Services.AddTransient<LoginViewModel>();
 
-#if DEBUG
             builder.Logging.AddDebug();
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<LoginPage>();
@@ -51,7 +50,7 @@ namespace Shutool
 
             builder.Services.AddTransient<RiderMainViewModel>();
             builder.Services.AddTransient<RiderMainPage>();
-#endif
+
             builder.Services.AddTransient<DriverPendingViewModel>();
             builder.Services.AddTransient<DriverPendingPage>();
 
@@ -69,6 +68,10 @@ namespace Shutool
 
             builder.Services.AddTransient<AdminRequestLogViewModel>();
             builder.Services.AddTransient<AdminRequestLogPage>();
+
+#if DEBUG
+            builder.Logging.AddDebug();
+#endif
             return builder.Build();
         }
     }
