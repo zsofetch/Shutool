@@ -1,9 +1,15 @@
-namespace Shutool.Views;
+using Shutool.ViewModels;
 
-public partial class SignUpPage : ContentPage
+namespace Shutool.Views
 {
-	public SignUpPage()
-	{
-		InitializeComponent();
-	}
+    public partial class SignUpPage : ContentPage
+    {
+        public SignUpPage(SignUpViewModel viewModel)
+        {
+            InitializeComponent();
+
+            // This is the crucial line! It tells the UI to use your ViewModel for all {Binding ...} commands.
+            BindingContext = viewModel;
+        }
+    }
 }
