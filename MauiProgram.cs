@@ -19,9 +19,9 @@ namespace Shutool
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // 1. Define your Supabase Credentials
-            var url = "url"; // Replace with your URL
-            var key = "key";    // Replace with your Key
+            // 1. Define your Supabase Credentials using the Config class
+            var url = Config.SupabaseUrl;
+            var key = Config.SupabaseKey;
 
             // 2. Configure Supabase Options
             var options = new SupabaseOptions
@@ -29,6 +29,7 @@ namespace Shutool
                 AutoRefreshToken = true,
                 AutoConnectRealtime = true
             };
+
 
             // 3. Register the Supabase Client as a Singleton
             builder.Services.AddSingleton(provider => new Client(url, key, options));
