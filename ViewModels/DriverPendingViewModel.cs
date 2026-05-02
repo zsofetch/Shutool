@@ -10,24 +10,60 @@ public partial class DriverPendingViewModel : ObservableObject
 {
     private readonly SupabaseService _supabaseService;
 
-    // This collection binds directly to your CollectionView in the UI
     public ObservableCollection<DriverRequestDisplayModel> PendingRequests { get; } = new();
+
+    [ObservableProperty] private string driverName = "Loading...";
+    [ObservableProperty] private string shuttleDisplay = "Shuttle: --";
 
     public DriverPendingViewModel(SupabaseService supabaseService)
     {
         _supabaseService = supabaseService;
-        LoadRequestsAsync(); // Load automatically when the ViewModel is created
+        LoadRequestsAsync();
+    }
+
+    private async Task LoadProfileAsync()
+    {
+        var profile = await _supabaseService.GetCurrentUserProfileAsync();
+        if (profile != null)
+        {
+            DriverName = profile.Username ?? "Unknown Driver";
+            ShuttleDisplay = profile.ShuttleNumber != null ? $"Shuttle {profile.ShuttleNumber}" : "Unassigned";
+        }
     }
 
     [RelayCommand]
     private async Task LoadRequestsAsync()
     {
-        var requests = await _supabaseService.GetPendingRequestsAsync();
+        await LoadProfileAsync();
 
+        var requests = await _supabaseService.GetPendingRequestsAsync();
         PendingRequests.Clear();
         foreach (var req in requests)
         {
             PendingRequests.Add(req);
+        }
+    }
+
+    [RelayCommand]
+    private async Task MarkAllCompleteAsync()
+    {
+        await _supabaseService.MarkAllPendingAsCompleteAsync();
+        await LoadRequestsAsync();
+        await Application.Current.MainPage.DisplayAlert("Success", "All requests marked as complete!", "OK");
+    }
+
+    [RelayCommand]
+    private async Task CompleteRideAsync(DriverRequestDisplayModel request)
+    {
+        if (request == null) return;
+
+        // 1. Changed "request.Id" to "request.RequestId"
+        // 2. Changed "MarkRequestCompletedAsync" to "CompleteRequestAsync"
+        var success = await _supabaseService.CompleteRequestAsync(request.RequestId);
+
+        if (success)
+        {
+            await LoadRequestsAsync();
         }
     }
 
@@ -38,31 +74,13 @@ public partial class DriverPendingViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task CompleteRideAsync(DriverRequestDisplayModel request)
-    {
-        if (request == null) return;
-
-        var success = await _supabaseService.CompleteRequestAsync(request.RequestId);
-
-        if (success)
-        {
-            // Instantly remove it from the pending UI list
-            PendingRequests.Remove(request);
-            await Application.Current.MainPage.DisplayAlert("Success", $"{request.RiderName} has been picked up!", "OK");
-        }
-        else
-        {
-            await Application.Current.MainPage.DisplayAlert("Error", "Failed to update request.", "OK");
-        }
-    }
-
-    [RelayCommand]
     private async Task GoToProfileAsync()
     {
-        // Uses absolute routing to push the profile page on top of the current stack
         await Shell.Current.GoToAsync("ProfilePage");
     }
 }
+
+
 
 //(Note: To use this in your UI, you would wrap the DataTemplate in your DriverPendingPage.xaml
 //inside a SwipeView, exactly like we did for the Rider's delete function, but binding it to CompleteRideCommand with a green background!)

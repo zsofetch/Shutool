@@ -10,6 +10,7 @@ namespace Shutool.Views
 
             // Link the UI elements (like the CollectionView) to the data in the ViewModel
             BindingContext = viewModel;
+
         }
     }
 }

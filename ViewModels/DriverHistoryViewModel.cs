@@ -12,30 +12,36 @@ public partial class DriverHistoryViewModel : ObservableObject
 
     public ObservableCollection<DriverRequestDisplayModel> HistoryRequests { get; } = new();
 
+    [ObservableProperty] private string driverName = "Loading...";
+    [ObservableProperty] private string shuttleDisplay = "Shuttle: --";
+
     public DriverHistoryViewModel(SupabaseService supabaseService)
     {
         _supabaseService = supabaseService;
         LoadHistoryAsync();
     }
 
-    [RelayCommand]
-    private async Task LoadHistoryAsync()
+    private async Task LoadProfileAsync()
     {
-        var history = await _supabaseService.GetDriverHistoryAsync();
-
-        HistoryRequests.Clear();
-        foreach (var req in history)
+        var profile = await _supabaseService.GetCurrentUserProfileAsync();
+        if (profile != null)
         {
-            HistoryRequests.Add(req);
+            DriverName = profile.Username ?? "Unknown Driver";
+            ShuttleDisplay = profile.ShuttleNumber != null ? $"Shuttle {profile.ShuttleNumber}" : "Unassigned";
         }
     }
 
     [RelayCommand]
-    private async Task ClearHistoryAsync()
+    private async Task LoadHistoryAsync()
     {
-        // Optional: Add a call to SupabaseService to physically delete these if you want, 
-        // or just clear them locally from the UI.
+        await LoadProfileAsync();
+
+        var requests = await _supabaseService.GetDriverHistoryAsync();
         HistoryRequests.Clear();
+        foreach (var req in requests)
+        {
+            HistoryRequests.Add(req);
+        }
     }
 
     [RelayCommand]
@@ -45,9 +51,19 @@ public partial class DriverHistoryViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ClearHistoryAsync()
+    {
+        bool answer = await Application.Current.MainPage.DisplayAlert("Confirm", "Clear your history?", "Yes", "No");
+        if (answer)
+        {
+            // Optional: Implement actual delete logic in SupabaseService here if desired.
+            HistoryRequests.Clear();
+        }
+    }
+
+    [RelayCommand]
     private async Task GoToProfileAsync()
     {
-        // Uses absolute routing to push the profile page on top of the current stack
         await Shell.Current.GoToAsync("ProfilePage");
     }
 }

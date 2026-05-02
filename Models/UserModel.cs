@@ -8,7 +8,6 @@ namespace Shutool.Models
     [Table("users")]
     public class UserModel : BaseModel
     {
-        // Add the 'true' flag here! This forces the app to send your ID.
         [PrimaryKey("id", true)]
         public string Id { get; set; }
 
@@ -26,5 +25,8 @@ namespace Shutool.Models
 
         [Column("student_id")]
         public string StudentId { get; set; }
+
+        [Column("shuttle_number")]
+        public string ShuttleNumber { get; set; }
     }
 }
